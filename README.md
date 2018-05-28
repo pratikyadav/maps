@@ -1,5 +1,5 @@
-# maps
-some maps
+# Maps
 
-
-- **Mapbox streets** https://pratikyadav.github.io/maps/simple-map/
+- **Mapbox streets** https://pratikyadav.github.io/maps/mapbox-streets/
+- **Mapbox Satellite** https://pratikyadav.github.io/maps/mapbox-satellite/
+- **Mapbox terrain** https://pratikyadav.github.io/maps/mapbox-terrain/
