@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Swipe between maps</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css" rel="stylesheet" />
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<style>
+    body {
+        overflow: hidden;
+    }
+
+    body * {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.js"></script>
+<link
+    rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css"
+    type="text/css"
+/>
+<div id="comparison-container">
+    <div id="before" class="map"></div>
+    <div id="after" class="map"></div>
+</div>
+<script>
+
+  mapboxgl.accessToken = 'pk.eyJ1IjoicHJhdGlreWFkYXYiLCJhIjoiY2sxd3FlMTdvMDFiNjNtbzNkMXRmbjFmaiJ9.LmtWDsU0_LuuZfWnlBe4gA';
+  var beforeMap = new mapboxgl.Map({
+    container: 'before',
+    style: 'mapbox://styles/pratikyadav/ckl1av39i0af117pm2vrie6pg',
+    center: [79.73413, 30.37667],
+    zoom: 13.59,
+    bearing: -176,
+    pitch: 44,
+    hash: true
+  });
+
+  var afterMap = new mapboxgl.Map({
+    container: 'after',
+    style: 'mapbox://styles/pratikyadav/ckl1b8bhr0asa17pmfse7fa1z',
+    center: [79.73413, 30.37667],
+    zoom: 13.59,
+    bearing: -176,
+    pitch: 44,
+    hash: true
+  });
+
+  // A selector or reference to HTML element
+  var container = '#comparison-container';
+
+  var map = new mapboxgl.Compare(beforeMap, afterMap, container, {
+    // Set this to enable comparing two maps by mouse movement:
+    // mousemove: true
+  });
+  beforeMap.on('load', function () {
+    beforeMap.addSource('mapbox-dem', {
+      'type': 'raster-dem',
+      'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+      'tileSize': 512,
+      'maxzoom': 14
+    });
+    // add the DEM source as a terrain layer with exaggerated height
+    beforeMap.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+
+    // add a sky layer that will show when the map is highly pitched
+    beforeMap.addLayer({
+      'id': 'sky',
+      'type': 'sky',
+      'paint': {
+        'sky-type': 'atmosphere',
+        'sky-atmosphere-sun': [0.0, 0.0],
+        'sky-atmosphere-sun-intensity': 15
+      }
+    });
+  });
+
+  afterMap.on('load', function () {
+    afterMap.addSource('mapbox-dem', {
+      'type': 'raster-dem',
+      'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+      'tileSize': 512,
+      'maxzoom': 14
+    });
+    // add the DEM source as a terrain layer with exaggerated height
+    afterMap.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+
+    // add a sky layer that will show when the map is highly pitched
+    afterMap.addLayer({
+      'id': 'sky',
+      'type': 'sky',
+      'paint': {
+        'sky-type': 'atmosphere',
+        'sky-atmosphere-sun': [0.0, 0.0],
+        'sky-atmosphere-sun-intensity': 15
+      }
+    });
+  });
+
+
+</script>
+
+</body>
+</html>
