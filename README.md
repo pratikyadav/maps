@@ -7,3 +7,4 @@
 - **Mapbox 3D terrain** https://pratikyadav.github.io/maps/3d/
 - **Golden Gate bridge** https://pratikyadav.github.io/maps/golden-gate/
 - **Lombard-st-video** https://pratikyadav.github.io/maps/lombard-st-video/
+- **Spacex Launch** https://pratikyadav.github.io/maps/spacex-launch/
