@@ -8,3 +8,5 @@
 - **Golden Gate bridge** https://pratikyadav.github.io/maps/golden-gate/
 - **Lombard-st-video** https://pratikyadav.github.io/maps/lombard-st-video/
 - **Spacex Launch** https://pratikyadav.github.io/maps/spacex-launch/
+- **Uttrakhand Flood** https://pratikyadav.github.io/maps/uk-flood-imagery/
+- **Dragon flying over San Francisco** https://pratikyadav.github.io/maps/dragon-over-sf/

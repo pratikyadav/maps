@@ -1,50 +1,60 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset='utf-8' />
-    <title>3D buildings</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
-    <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css' type='text/css' />
-    <style>
-    <style>
-        body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
-    </style>
-</head>
-<body>
-
-<div id='map'></div>
-<script>
-mapboxgl.accessToken = 'pk.eyJ1IjoicHJhdGlreWFkYXYiLCJhIjoiY2pocHcxYTNxMWRpdTM3cWp5dHZtM2d6bCJ9.iPF7EN0N_BUbdwQ04t_HSw';
-var map = new mapboxgl.Map({
-    style: 'mapbox://styles/mapbox/light-v10',
-    center: [-74.0066, 40.7135],
-    zoom: 15.5,
-    pitch: 45,
-    bearing: -17.6,
-    container: 'map',
-    antialias: true,
-    hash: true
-});
-
-// The 'building' layer in the mapbox-streets vector source contains building-height
-// data from OpenStreetMap.
-map.on('load', function() {
-    // Insert the layer beneath any symbol layer.
-    var layers = map.getStyle().layers;
-
-    var labelLayerId;
-    for (var i = 0; i < layers.length; i++) {
-        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
-            labelLayerId = layers[i].id;
-            break;
-        }
+  <meta charset='utf-8' />
+  <title>3D buildings</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css' type='text/css' />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
     }
 
-    map.addLayer({
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='map'></div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicHJhdGlreWFkYXYiLCJhIjoiY2pocHcxYTNxMWRpdTM3cWp5dHZtM2d6bCJ9.iPF7EN0N_BUbdwQ04t_HSw';
+    var map = new mapboxgl.Map({
+      style: 'mapbox://styles/mapbox/light-v10',
+      center: [-74.0066, 40.7135],
+      zoom: 15.5,
+      pitch: 45,
+      bearing: -17.6,
+      container: 'map',
+      antialias: true,
+      hash: true
+    });
+
+    // The 'building' layer in the mapbox-streets vector source contains building-height
+    // data from OpenStreetMap.
+    map.on('load', function() {
+      // Insert the layer beneath any symbol layer.
+      var layers = map.getStyle().layers;
+
+      var labelLayerId;
+      for (var i = 0; i < layers.length; i++) {
+        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+          labelLayerId = layers[i].id;
+          break;
+        }
+      }
+
+      map.addLayer({
         'id': '3d-buildings',
         'source': 'composite',
         'source-layer': 'building',
@@ -52,38 +62,41 @@ map.on('load', function() {
         'type': 'fill-extrusion',
         'minzoom': 15,
         'paint': {
-            'fill-extrusion-color': '#aaa',
+          'fill-extrusion-color': '#aaa',
 
-            // use an 'interpolate' expression to add a smooth transition effect to the
-            // buildings as the user zooms in
-            'fill-extrusion-height': [
-                "interpolate", ["linear"], ["zoom"],
-                15, 0,
-                15.05, ["get", "height"]
-            ],
-            'fill-extrusion-base': [
-                "interpolate", ["linear"], ["zoom"],
-                15, 0,
-                15.05, ["get", "min_height"]
-            ],
-            'fill-extrusion-opacity': .6
+          // use an 'interpolate' expression to add a smooth transition effect to the
+          // buildings as the user zooms in
+          'fill-extrusion-height': [
+            "interpolate", ["linear"],
+            ["zoom"],
+            15, 0,
+            15.05, ["get", "height"]
+          ],
+          'fill-extrusion-base': [
+            "interpolate", ["linear"],
+            ["zoom"],
+            15, 0,
+            15.05, ["get", "min_height"]
+          ],
+          'fill-extrusion-opacity': 0.6
         }
-    }, labelLayerId);
-});
-map.addControl(new MapboxGeocoder({
-    accessToken: mapboxgl.accessToken
-}))
-var nav = new mapboxgl.NavigationControl();
-map.addControl(nav, 'top-right');
+      }, labelLayerId);
+    });
+    map.addControl(new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken
+    }));
+    var nav = new mapboxgl.NavigationControl();
+    map.addControl(nav, 'top-right');
 
- var scale = new mapboxgl.ScaleControl({
-    maxWidth: 80,
-    unit: 'imperial'
-});
-map.addControl(scale);
+    var scale = new mapboxgl.ScaleControl({
+      maxWidth: 80,
+      unit: 'imperial'
+    });
+    map.addControl(scale);
 
-scale.setUnit('metric');
-</script>
+    scale.setUnit('metric');
+  </script>
 
 </body>
+
 </html>
