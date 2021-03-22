@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)https://gltf-playground.netlify.app/ -->
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>Cars</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <script src="./glTF Playground_files/mapbox-gl.js"></script>
+  <link href="./glTF Playground_files/mapbox-gl.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+  <style type="text/css">
+    .dg ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      clear: both
+    }
+
+    .dg.ac {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 0;
+      z-index: 0
+    }
+
+    .dg:not(.ac) .main {
+      overflow: hidden
+    }
+
+    .dg.main {
+      -webkit-transition: opacity .1s linear;
+      -o-transition: opacity .1s linear;
+      -moz-transition: opacity .1s linear;
+      transition: opacity .1s linear
+    }
+
+    .dg.main.taller-than-window {
+      overflow-y: auto
+    }
+
+    .dg.main.taller-than-window .close-button {
+      opacity: 1;
+      margin-top: -1px;
+      border-top: 1px solid #2c2c2c
+    }
+
+    .dg.main ul.closed .close-button {
+      opacity: 1 !important
+    }
+
+    .dg.main:hover .close-button,
+    .dg.main .close-button.drag {
+      opacity: 1
+    }
+
+    .dg.main .close-button {
+      -webkit-transition: opacity .1s linear;
+      -o-transition: opacity .1s linear;
+      -moz-transition: opacity .1s linear;
+      transition: opacity .1s linear;
+      border: 0;
+      line-height: 19px;
+      height: 20px;
+      cursor: pointer;
+      text-align: center;
+      background-color: #000
+    }
+
+    .dg.main .close-button.close-top {
+      position: relative
+    }
+
+    .dg.main .close-button.close-bottom {
+      position: absolute
+    }
+
+    .dg.main .close-button:hover {
+      background-color: #111
+    }
+
+    .dg.a {
+      float: right;
+      margin-right: 15px;
+      overflow-y: visible
+    }
+
+    .dg.a.has-save>ul.close-top {
+      margin-top: 0
+    }
+
+    .dg.a.has-save>ul.close-bottom {
+      margin-top: 27px
+    }
+
+    .dg.a.has-save>ul.closed {
+      margin-top: 0
+    }
+
+    .dg.a .save-row {
+      top: 0;
+      z-index: 1002
+    }
+
+    .dg.a .save-row.close-top {
+      position: relative
+    }
+
+    .dg.a .save-row.close-bottom {
+      position: fixed
+    }
+
+    .dg li {
+      -webkit-transition: height .1s ease-out;
+      -o-transition: height .1s ease-out;
+      -moz-transition: height .1s ease-out;
+      transition: height .1s ease-out;
+      -webkit-transition: overflow .1s linear;
+      -o-transition: overflow .1s linear;
+      -moz-transition: overflow .1s linear;
+      transition: overflow .1s linear
+    }
+
+    .dg li:not(.folder) {
+      cursor: auto;
+      height: 27px;
+      line-height: 27px;
+      padding: 0 4px 0 5px
+    }
+
+    .dg li.folder {
+      padding: 0;
+      border-left: 4px solid rgba(0, 0, 0, 0)
+    }
+
+    .dg li.title {
+      cursor: pointer;
+      margin-left: -4px
+    }
+
+    .dg .closed li:not(.title),
+    .dg .closed ul li,
+    .dg .closed ul li>* {
+      height: 0;
+      overflow: hidden;
+      border: 0
+    }
+
+    .dg .cr {
+      clear: both;
+      padding-left: 3px;
+      height: 27px;
+      overflow: hidden
+    }
+
+    .dg .property-name {
+      cursor: default;
+      float: left;
+      clear: left;
+      width: 40%;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .dg .c {
+      float: left;
+      width: 60%;
+      position: relative
+    }
+
+    .dg .c input[type=text] {
+      border: 0;
+      margin-top: 4px;
+      padding: 3px;
+      width: 100%;
+      float: right
+    }
+
+    .dg .has-slider input[type=text] {
+      width: 30%;
+      margin-left: 0
+    }
+
+    .dg .slider {
+      float: left;
+      width: 66%;
+      margin-left: -5px;
+      margin-right: 0;
+      height: 19px;
+      margin-top: 4px
+    }
+
+    .dg .slider-fg {
+      height: 100%
+    }
+
+    .dg .c input[type=checkbox] {
+      margin-top: 7px
+    }
+
+    .dg .c select {
+      margin-top: 5px
+    }
+
+    .dg .cr.function,
+    .dg .cr.function .property-name,
+    .dg .cr.function *,
+    .dg .cr.boolean,
+    .dg .cr.boolean * {
+      cursor: pointer
+    }
+
+    .dg .cr.color {
+      overflow: visible
+    }
+
+    .dg .selector {
+      display: none;
+      position: absolute;
+      margin-left: -9px;
+      margin-top: 23px;
+      z-index: 10
+    }
+
+    .dg .c:hover .selector,
+    .dg .selector.drag {
+      display: block
+    }
+
+    .dg li.save-row {
+      padding: 0
+    }
+
+    .dg li.save-row .button {
+      display: inline-block;
+      padding: 0px 6px
+    }
+
+    .dg.dialogue {
+      background-color: #222;
+      width: 460px;
+      padding: 15px;
+      font-size: 13px;
+      line-height: 15px
+    }
+
+    #dg-new-constructor {
+      padding: 10px;
+      color: #222;
+      font-family: Monaco, monospace;
+      font-size: 10px;
+      border: 0;
+      resize: none;
+      box-shadow: inset 1px 1px 1px #888;
+      word-wrap: break-word;
+      margin: 12px 0;
+      display: block;
+      width: 440px;
+      overflow-y: scroll;
+      height: 100px;
+      position: relative
+    }
+
+    #dg-local-explain {
+      display: none;
+      font-size: 11px;
+      line-height: 17px;
+      border-radius: 3px;
+      background-color: #333;
+      padding: 8px;
+      margin-top: 10px
+    }
+
+    #dg-local-explain code {
+      font-size: 10px
+    }
+
+    #dat-gui-save-locally {
+      display: none
+    }
+
+    .dg {
+      color: #eee;
+      font: 11px 'Lucida Grande', sans-serif;
+      text-shadow: 0 -1px 0 #111
+    }
+
+    .dg.main::-webkit-scrollbar {
+      width: 5px;
+      background: #1a1a1a
+    }
+
+    .dg.main::-webkit-scrollbar-corner {
+      height: 0;
+      display: none
+    }
+
+    .dg.main::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background: #676767
+    }
+
+    .dg li:not(.folder) {
+      background: #1a1a1a;
+      border-bottom: 1px solid #2c2c2c
+    }
+
+    .dg li.save-row {
+      line-height: 25px;
+      background: #dad5cb;
+      border: 0
+    }
+
+    .dg li.save-row select {
+      margin-left: 5px;
+      width: 108px
+    }
+
+    .dg li.save-row .button {
+      margin-left: 5px;
+      margin-top: 1px;
+      border-radius: 2px;
+      font-size: 9px;
+      line-height: 7px;
+      padding: 4px 4px 5px 4px;
+      background: #c5bdad;
+      color: #fff;
+      text-shadow: 0 1px 0 #b0a58f;
+      box-shadow: 0 -1px 0 #b0a58f;
+      cursor: pointer
+    }
+
+    .dg li.save-row .button.gears {
+      background: #c5bdad url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAANCAYAAAB/9ZQ7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQJJREFUeNpiYKAU/P//PwGIC/ApCABiBSAW+I8AClAcgKxQ4T9hoMAEUrxx2QSGN6+egDX+/vWT4e7N82AMYoPAx/evwWoYoSYbACX2s7KxCxzcsezDh3evFoDEBYTEEqycggWAzA9AuUSQQgeYPa9fPv6/YWm/Acx5IPb7ty/fw+QZblw67vDs8R0YHyQhgObx+yAJkBqmG5dPPDh1aPOGR/eugW0G4vlIoTIfyFcA+QekhhHJhPdQxbiAIguMBTQZrPD7108M6roWYDFQiIAAv6Aow/1bFwXgis+f2LUAynwoIaNcz8XNx3Dl7MEJUDGQpx9gtQ8YCueB+D26OECAAQDadt7e46D42QAAAABJRU5ErkJggg==) 2px 1px no-repeat;
+      height: 7px;
+      width: 8px
+    }
+
+    .dg li.save-row .button:hover {
+      background-color: #bab19e;
+      box-shadow: 0 -1px 0 #b0a58f
+    }
+
+    .dg li.folder {
+      border-bottom: 0
+    }
+
+    .dg li.title {
+      padding-left: 16px;
+      background: #000 url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2)
+    }
+
+    .dg .closed li.title {
+      background-image: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==)
+    }
+
+    .dg .cr.boolean {
+      border-left: 3px solid #806787
+    }
+
+    .dg .cr.color {
+      border-left: 3px solid
+    }
+
+    .dg .cr.function {
+      border-left: 3px solid #e61d5f
+    }
+
+    .dg .cr.number {
+      border-left: 3px solid #2FA1D6
+    }
+
+    .dg .cr.number input[type=text] {
+      color: #2FA1D6
+    }
+
+    .dg .cr.string {
+      border-left: 3px solid #1ed36f
+    }
+
+    .dg .cr.string input[type=text] {
+      color: #1ed36f
+    }
+
+    .dg .cr.function:hover,
+    .dg .cr.boolean:hover {
+      background: #111
+    }
+
+    .dg .c input[type=text] {
+      background: #303030;
+      outline: none
+    }
+
+    .dg .c input[type=text]:hover {
+      background: #3c3c3c
+    }
+
+    .dg .c input[type=text]:focus {
+      background: #494949;
+      color: #fff
+    }
+
+    .dg .c .slider {
+      background: #303030;
+      cursor: ew-resize
+    }
+
+    .dg .c .slider-fg {
+      background: #2FA1D6;
+      max-width: 100%
+    }
+
+    .dg .c .slider:hover {
+      background: #3c3c3c
+    }
+
+    .dg .c .slider:hover .slider-fg {
+      background: #44abda
+    }
+  </style>
+  <style type="text/css">
+    .dg ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      clear: both
+    }
+
+    .dg.ac {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 0;
+      z-index: 0
+    }
+
+    .dg:not(.ac) .main {
+      overflow: hidden
+    }
+
+    .dg.main {
+      -webkit-transition: opacity .1s linear;
+      -o-transition: opacity .1s linear;
+      -moz-transition: opacity .1s linear;
+      transition: opacity .1s linear
+    }
+
+    .dg.main.taller-than-window {
+      overflow-y: auto
+    }
+
+    .dg.main.taller-than-window .close-button {
+      opacity: 1;
+      margin-top: -1px;
+      border-top: 1px solid #2c2c2c
+    }
+
+    .dg.main ul.closed .close-button {
+      opacity: 1 !important
+    }
+
+    .dg.main:hover .close-button,
+    .dg.main .close-button.drag {
+      opacity: 1
+    }
+
+    .dg.main .close-button {
+      -webkit-transition: opacity .1s linear;
+      -o-transition: opacity .1s linear;
+      -moz-transition: opacity .1s linear;
+      transition: opacity .1s linear;
+      border: 0;
+      line-height: 19px;
+      height: 20px;
+      cursor: pointer;
+      text-align: center;
+      background-color: #000
+    }
+
+    .dg.main .close-button.close-top {
+      position: relative
+    }
+
+    .dg.main .close-button.close-bottom {
+      position: absolute
+    }
+
+    .dg.main .close-button:hover {
+      background-color: #111
+    }
+
+    .dg.a {
+      float: right;
+      margin-right: 15px;
+      overflow-y: visible
+    }
+
+    .dg.a.has-save>ul.close-top {
+      margin-top: 0
+    }
+
+    .dg.a.has-save>ul.close-bottom {
+      margin-top: 27px
+    }
+
+    .dg.a.has-save>ul.closed {
+      margin-top: 0
+    }
+
+    .dg.a .save-row {
+      top: 0;
+      z-index: 1002
+    }
+
+    .dg.a .save-row.close-top {
+      position: relative
+    }
+
+    .dg.a .save-row.close-bottom {
+      position: fixed
+    }
+
+    .dg li {
+      -webkit-transition: height .1s ease-out;
+      -o-transition: height .1s ease-out;
+      -moz-transition: height .1s ease-out;
+      transition: height .1s ease-out;
+      -webkit-transition: overflow .1s linear;
+      -o-transition: overflow .1s linear;
+      -moz-transition: overflow .1s linear;
+      transition: overflow .1s linear
+    }
+
+    .dg li:not(.folder) {
+      cursor: auto;
+      height: 27px;
+      line-height: 27px;
+      padding: 0 4px 0 5px
+    }
+
+    .dg li.folder {
+      padding: 0;
+      border-left: 4px solid rgba(0, 0, 0, 0)
+    }
+
+    .dg li.title {
+      cursor: pointer;
+      margin-left: -4px
+    }
+
+    .dg .closed li:not(.title),
+    .dg .closed ul li,
+    .dg .closed ul li>* {
+      height: 0;
+      overflow: hidden;
+      border: 0
+    }
+
+    .dg .cr {
+      clear: both;
+      padding-left: 3px;
+      height: 27px;
+      overflow: hidden
+    }
+
+    .dg .property-name {
+      cursor: default;
+      float: left;
+      clear: left;
+      width: 40%;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .dg .c {
+      float: left;
+      width: 60%;
+      position: relative
+    }
+
+    .dg .c input[type=text] {
+      border: 0;
+      margin-top: 4px;
+      padding: 3px;
+      width: 100%;
+      float: right
+    }
+
+    .dg .has-slider input[type=text] {
+      width: 30%;
+      margin-left: 0
+    }
+
+    .dg .slider {
+      float: left;
+      width: 66%;
+      margin-left: -5px;
+      margin-right: 0;
+      height: 19px;
+      margin-top: 4px
+    }
+
+    .dg .slider-fg {
+      height: 100%
+    }
+
+    .dg .c input[type=checkbox] {
+      margin-top: 7px
+    }
+
+    .dg .c select {
+      margin-top: 5px
+    }
+
+    .dg .cr.function,
+    .dg .cr.function .property-name,
+    .dg .cr.function *,
+    .dg .cr.boolean,
+    .dg .cr.boolean * {
+      cursor: pointer
+    }
+
+    .dg .cr.color {
+      overflow: visible
+    }
+
+    .dg .selector {
+      display: none;
+      position: absolute;
+      margin-left: -9px;
+      margin-top: 23px;
+      z-index: 10
+    }
+
+    .dg .c:hover .selector,
+    .dg .selector.drag {
+      display: block
+    }
+
+    .dg li.save-row {
+      padding: 0
+    }
+
+    .dg li.save-row .button {
+      display: inline-block;
+      padding: 0px 6px
+    }
+
+    .dg.dialogue {
+      background-color: #222;
+      width: 460px;
+      padding: 15px;
+      font-size: 13px;
+      line-height: 15px
+    }
+
+    #dg-new-constructor {
+      padding: 10px;
+      color: #222;
+      font-family: Monaco, monospace;
+      font-size: 10px;
+      border: 0;
+      resize: none;
+      box-shadow: inset 1px 1px 1px #888;
+      word-wrap: break-word;
+      margin: 12px 0;
+      display: block;
+      width: 440px;
+      overflow-y: scroll;
+      height: 100px;
+      position: relative
+    }
+
+    #dg-local-explain {
+      display: none;
+      font-size: 11px;
+      line-height: 17px;
+      border-radius: 3px;
+      background-color: #333;
+      padding: 8px;
+      margin-top: 10px
+    }
+
+    #dg-local-explain code {
+      font-size: 10px
+    }
+
+    #dat-gui-save-locally {
+      display: none
+    }
+
+    .dg {
+      color: #eee;
+      font: 11px 'Lucida Grande', sans-serif;
+      text-shadow: 0 -1px 0 #111
+    }
+
+    .dg.main::-webkit-scrollbar {
+      width: 5px;
+      background: #1a1a1a
+    }
+
+    .dg.main::-webkit-scrollbar-corner {
+      height: 0;
+      display: none
+    }
+
+    .dg.main::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background: #676767
+    }
+
+    .dg li:not(.folder) {
+      background: #1a1a1a;
+      border-bottom: 1px solid #2c2c2c
+    }
+
+    .dg li.save-row {
+      line-height: 25px;
+      background: #dad5cb;
+      border: 0
+    }
+
+    .dg li.save-row select {
+      margin-left: 5px;
+      width: 108px
+    }
+
+    .dg li.save-row .button {
+      margin-left: 5px;
+      margin-top: 1px;
+      border-radius: 2px;
+      font-size: 9px;
+      line-height: 7px;
+      padding: 4px 4px 5px 4px;
+      background: #c5bdad;
+      color: #fff;
+      text-shadow: 0 1px 0 #b0a58f;
+      box-shadow: 0 -1px 0 #b0a58f;
+      cursor: pointer
+    }
+
+    .dg li.save-row .button.gears {
+      background: #c5bdad url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAANCAYAAAB/9ZQ7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQJJREFUeNpiYKAU/P//PwGIC/ApCABiBSAW+I8AClAcgKxQ4T9hoMAEUrxx2QSGN6+egDX+/vWT4e7N82AMYoPAx/evwWoYoSYbACX2s7KxCxzcsezDh3evFoDEBYTEEqycggWAzA9AuUSQQgeYPa9fPv6/YWm/Acx5IPb7ty/fw+QZblw67vDs8R0YHyQhgObx+yAJkBqmG5dPPDh1aPOGR/eugW0G4vlIoTIfyFcA+QekhhHJhPdQxbiAIguMBTQZrPD7108M6roWYDFQiIAAv6Aow/1bFwXgis+f2LUAynwoIaNcz8XNx3Dl7MEJUDGQpx9gtQ8YCueB+D26OECAAQDadt7e46D42QAAAABJRU5ErkJggg==) 2px 1px no-repeat;
+      height: 7px;
+      width: 8px
+    }
+
+    .dg li.save-row .button:hover {
+      background-color: #bab19e;
+      box-shadow: 0 -1px 0 #b0a58f
+    }
+
+    .dg li.folder {
+      border-bottom: 0
+    }
+
+    .dg li.title {
+      padding-left: 16px;
+      background: #000 url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2)
+    }
+
+    .dg .closed li.title {
+      background-image: url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==)
+    }
+
+    .dg .cr.boolean {
+      border-left: 3px solid #806787
+    }
+
+    .dg .cr.color {
+      border-left: 3px solid
+    }
+
+    .dg .cr.function {
+      border-left: 3px solid #e61d5f
+    }
+
+    .dg .cr.number {
+      border-left: 3px solid #2FA1D6
+    }
+
+    .dg .cr.number input[type=text] {
+      color: #2FA1D6
+    }
+
+    .dg .cr.string {
+      border-left: 3px solid #1ed36f
+    }
+
+    .dg .cr.string input[type=text] {
+      color: #1ed36f
+    }
+
+    .dg .cr.function:hover,
+    .dg .cr.boolean:hover {
+      background: #111
+    }
+
+    .dg .c input[type=text] {
+      background: #303030;
+      outline: none
+    }
+
+    .dg .c input[type=text]:hover {
+      background: #3c3c3c
+    }
+
+    .dg .c input[type=text]:focus {
+      background: #494949;
+      color: #fff
+    }
+
+    .dg .c .slider {
+      background: #303030;
+      cursor: ew-resize
+    }
+
+    .dg .c .slider-fg {
+      background: #2FA1D6;
+      max-width: 100%
+    }
+
+    .dg .c .slider:hover {
+      background: #3c3c3c
+    }
+
+    .dg .c .slider:hover .slider-fg {
+      background: #44abda
+    }
+  </style>
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.1000.0" data-gr-ext-installed="">
+  <script src="./glTF Playground_files/three.min.js"></script>
+  <script src="./glTF Playground_files/GLTFLoader.js"></script>
+  <script type="text/javascript" src="./glTF Playground_files/dat.gui.min.js"></script>
+  <div id="map" class="mapboxgl-map">
+    <div class="mapboxgl-canary" style="visibility: hidden;"></div>
+    <div class="mapboxgl-canvas-container mapboxgl-interactive mapboxgl-touch-drag-pan mapboxgl-touch-zoom-rotate"><canvas class="mapboxgl-canvas" tabindex="0" aria-label="Map" role="region" width="650" height="881"
+        style="width: 650px; height: 881px;"></canvas></div>
+    <div class="mapboxgl-control-container">
+      <div class="mapboxgl-ctrl-top-left"></div>
+      <div class="mapboxgl-ctrl-top-right"></div>
+      <div class="mapboxgl-ctrl-bottom-left">
+        <div class="mapboxgl-ctrl" style="display: block;"><a class="mapboxgl-ctrl-logo" target="_blank" rel="noopener nofollow" href="https://www.mapbox.com/" aria-label="Mapbox logo"></a></div>
+      </div>
+      <div class="mapboxgl-ctrl-bottom-right">
+        <div class="mapboxgl-ctrl mapboxgl-ctrl-attrib"><button class="mapboxgl-ctrl-attrib-button" title="Toggle attribution" aria-label="Toggle attribution"></button>
+          <div class="mapboxgl-ctrl-attrib-inner" role="list"><a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox</a> <a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap</a> <a class="mapbox-improve-map"
+              href="https://apps.mapbox.com/feedback/?owner=mapbox&amp;id=satellite-v9&amp;access_token=pk.eyJ1IjoiZGt3aWVucyIsImEiOiJja2x4NHF2cXEyb3RqMnZsd3oybHo4Z2tvIn0.siQjHwYWwXJlApvoDWC9rQ" target="_blank" rel="noopener nofollow"
+              title="Map feedback" aria-label="Map feedback">Improve this map</a> <a href="https://www.maxar.com/" target="_blank">© Maxar</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    prevTime = Date.now();
+    var mixer;
+    mapboxgl.accessToken =
+      "pk.eyJ1IjoibWFwYm94c2F0ZWxsaXRlIiwiYSI6ImNraW95dnExbjEwaHIyeG53dGVrNXdrdzcifQ.BGqKQ3fLFoxjBsIQN-TWww";
+    var map = (window.map = new mapboxgl.Map({
+      container: "map",
+      style: "mapbox://styles/mapbox/satellite-v9",
+      zoom: 19.84,
+      center: [-122.4448515, 37.8074503],
+      pitch: 68,
+      bearing: 43.2,
+      hash: true,
+      antialias: true, // create the gl context with MSAA antialiasing, so custom layers are antialiased
+    }));
+
+    var guiObject = function() {
+      this.model =
+        "models/bmw_i8/scene.gltf";
+      this.dx = 0;
+      this.dy = 0;
+      this.dz = 0;
+      this.rotation_x = 1;
+      this.rotation_y = 0;
+      this.rotation_z = 0;
+      this.scale = 0.25;
+      this.Source = ".";
+      this.Contact = ".";
+    };
+
+    var guiInstance = new guiObject();
+
+    models = {};
+
+    map.on("load", function() {
+      var gui = new dat.GUI();
+
+      var params = gui.addFolder("Model");
+
+      params
+        .add(guiInstance, "model", {
+          bmw_i8: "models/bmw_i8/scene.gltf",
+          Horse: "models/horse_run/scene.gltf",
+          ferrari: "models/ferrari_458_italia/scene.gltf",
+          Mustang: "models/ford_mustang_gt-350r/scene.gltf",
+          Tesla_3: "models/tesla_model_3/scene.gltf",
+          truck: "models/truck/scene.gltf"
+        })
+        .onChange(function(value) {
+          console.log(value);
+          map.removeLayer("3d-model");
+          map.addLayer(customLayer);
+        });
+      var params = gui.addFolder("Movement");
+      params.add(guiInstance, "dx", -1, 1, 0.0001);
+      params.add(guiInstance, "dy", -1, 1, 0.0001);
+      params.add(guiInstance, "dz", -1, 1, 0.0001);
+      var params = gui.addFolder("Rotation");
+      params.add(guiInstance, "rotation_x", -2, 2, 0.0001);
+      params.add(guiInstance, "rotation_y", -2, 2, 0.0001);
+      params.add(guiInstance, "rotation_z", -2, 2, 0.0001);
+      var params = gui.addFolder("Scale");
+      params.add(guiInstance, "scale", 0, 10, 0.0001);
+      var params = gui.addFolder("Data");
+      params.add(guiInstance, "Source");
+      var params = gui.addFolder("Contact");
+      params.add(guiInstance, "Contact");
+
+      gui.__folders["Data"].__controllers[0].domElement.innerHTML =
+        "Models found <a href='https://github.com/mrdoob/three.js/tree/master/examples/models/gltf' target='_blank'>here</a>";
+      gui.__folders["Contact"].__controllers[0].domElement.innerHTML =
+        "Made by <a href='https://twitter.com/dkwiens' target='_blank'>@dkwiens</a>";
+
+      map.addSource("mapbox-dem", {
+        type: "raster-dem",
+        url: "mapbox://mapbox.mapbox-terrain-dem-v1",
+        tileSize: 512,
+        maxzoom: 14,
+      });
+      // add the DEM source as a terrain layer with exaggerated height
+      map.setTerrain({
+        source: "mapbox-dem",
+        exaggeration: 0
+      });
+
+      // add a sky layer that will show when the map is highly pitched
+      map.addLayer({
+        id: "sky",
+        type: "sky",
+        paint: {
+          "sky-type": "atmosphere",
+          "sky-atmosphere-sun": [0.0, 0.0],
+          "sky-atmosphere-sun-intensity": 15,
+        },
+      });
+    });
+
+    // parameters to ensure the model is georeferenced correctly on the map
+    var modelOrigin = [-122.4448515, 37.8074503];
+    var modelAltitude = 1;
+    var modelRotate = [Math.PI / 2, 0, 0];
+
+    var modelAsMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
+      modelOrigin,
+      modelAltitude
+    );
+
+    var scaleScale = 600000000;
+
+    // transformation parameters to position, rotate and scale the 3D model onto the map
+    var modelTransform = {
+      translateX: modelAsMercatorCoordinate.x,
+      translateY: modelAsMercatorCoordinate.y,
+      translateZ: modelAsMercatorCoordinate.z,
+      rotateX: modelRotate[0],
+      rotateY: modelRotate[1],
+      rotateZ: modelRotate[2],
+      /* Since our 3D model is in real world meters, a scale transform needs to be
+       * applied since the CustomLayerInterface expects units in MercatorCoordinates.
+       */
+      scale: guiInstance.scale / scaleScale,
+    };
+
+    var THREE = window.THREE;
+
+    // configuration of the custom layer for a 3D model per the CustomLayerInterface
+    var customLayer = {
+      id: "3d-model",
+      type: "custom",
+      renderingMode: "3d",
+      onAdd: function(map, gl) {
+        this.camera = new THREE.Camera();
+        this.scene = new THREE.Scene();
+
+        // create two three.js lights to illuminate the model
+        var directionalLight = new THREE.DirectionalLight(0xffffff);
+        directionalLight.position.set(0, -70, 100).normalize();
+        this.scene.add(directionalLight);
+
+        var directionalLight2 = new THREE.DirectionalLight(0xffffff);
+        directionalLight2.position.set(0, 70, 100).normalize();
+        this.scene.add(directionalLight2);
+
+        // use the three.js GLTF loader to add the 3D model to the three.js scene
+        var loader = new THREE.GLTFLoader();
+        var model = guiInstance.model;
+        console.log(model);
+        loader.load(
+          model,
+          function(gltf) {
+            this.scene.add(gltf.scene);
+            mixer = new THREE.AnimationMixer(gltf.scene);
+            mixer.clipAction(gltf.animations[0]).setDuration(1).play();
+          }.bind(this)
+        );
+        this.map = map;
+
+        // use the Mapbox GL JS map canvas for three.js
+        this.renderer = new THREE.WebGLRenderer({
+          canvas: map.getCanvas(),
+          context: gl,
+          antialias: true,
+        });
+
+        this.renderer.autoClear = false;
+      },
+      render: function(gl, matrix) {
+        var rotationX = new THREE.Matrix4().makeRotationAxis(
+          new THREE.Vector3(1, 0, 0),
+          // modelTransform.rotateX
+          (Math.PI / 2) * guiInstance.rotation_x
+        );
+        var rotationY = new THREE.Matrix4().makeRotationAxis(
+          new THREE.Vector3(0, 1, 0),
+          (Math.PI / 2) * guiInstance.rotation_y
+        );
+        var rotationZ = new THREE.Matrix4().makeRotationAxis(
+          new THREE.Vector3(0, 0, 1),
+          (Math.PI / 2) * guiInstance.rotation_z
+        );
+
+        var m = new THREE.Matrix4().fromArray(matrix);
+
+        modelAltitude = modelAltitude + guiInstance.dz;
+        modelAsMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
+          modelOrigin,
+          modelAltitude
+        );
+        modelTransform.translateZ = modelAsMercatorCoordinate.z;
+
+        modelOrigin = [
+          modelOrigin[0] + guiInstance.dx / 1000,
+          modelOrigin[1] + guiInstance.dy / 1000,
+        ];
+        modelAsMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
+          modelOrigin,
+          modelAltitude
+        );
+        modelTransform.translateX = modelAsMercatorCoordinate.x;
+        modelTransform.translateY = modelAsMercatorCoordinate.y;
+
+        modelTransform.scale = guiInstance.scale / scaleScale;
+
+        var l = new THREE.Matrix4()
+          .makeTranslation(
+            modelTransform.translateX,
+            modelTransform.translateY,
+            modelTransform.translateZ
+          )
+          .scale(
+            new THREE.Vector3(
+              modelTransform.scale,
+              -modelTransform.scale,
+              modelTransform.scale
+            )
+          )
+          .multiply(rotationX)
+          .multiply(rotationY)
+          .multiply(rotationZ);
+        if (mixer) {
+          const time = Date.now();
+
+          mixer.update((time - prevTime) * 0.001);
+
+          prevTime = time;
+        }
+
+        this.camera.projectionMatrix = m.multiply(l);
+        this.renderer.state.reset();
+        this.renderer.render(this.scene, this.camera);
+        this.map.triggerRepaint();
+      },
+    };
+
+    map.on("style.load", function() {
+      map.addLayer(customLayer);
+    });
+  </script>
+
+
+  <div class="dg ac">
+    <div class="dg main a" style="width: 245px;">
+      <div style="width: 6px; margin-left: -3px; height: 196px; cursor: ew-resize; position: absolute;"></div>
+      <ul style="height: auto;">
+        <li class="folder">
+          <div class="dg">
+            <ul>
+              <li class="title">Model</li>
+              <li class="cr string">
+                <div><span class="property-name">model</span>
+                  <div class="c"><select>
+                      <option value="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb">Head</option>
+                      <option value="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/Duck/glTF/Duck.gltf">Duck</option>
+                      <option value="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/MetalRoughSpheres/glTF/MetalRoughSpheres.gltf">MetalRoughSpheres</option>
+                      <option value="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/Monster/glTF/Monster.gltf">Monster</option>
+                      <option value="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/Nefertiti/Nefertiti.glb">Nefertiti</option>
+                      <option value="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/Flamingo.glb">Flamingo</option>
+                      <option value="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/Horse.glb">Horse</option>
+                      <option value="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/Parrot.glb">Parrot</option>
+                      <option value="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/Stork.glb">Stork</option>
+                      <option value="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/RobotExpressive/RobotExpressive.glb">Robot</option>
+                    </select></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="folder">
+          <div class="dg">
+            <ul class="closed">
+              <li class="title">Movement</li>
+              <li class="cr number has-slider">
+                <div><span class="property-name">dx</span>
+                  <div class="c">
+                    <div><input type="text"></div>
+                    <div class="slider">
+                      <div class="slider-fg" style="width: 50%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="cr number has-slider">
+                <div><span class="property-name">dy</span>
+                  <div class="c">
+                    <div><input type="text"></div>
+                    <div class="slider">
+                      <div class="slider-fg" style="width: 50%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="cr number has-slider">
+                <div><span class="property-name">dz</span>
+                  <div class="c">
+                    <div><input type="text"></div>
+                    <div class="slider">
+                      <div class="slider-fg" style="width: 50%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="folder">
+          <div class="dg">
+            <ul class="closed">
+              <li class="title">Rotation</li>
+              <li class="cr number has-slider">
+                <div><span class="property-name">rotation_x</span>
+                  <div class="c">
+                    <div><input type="text"></div>
+                    <div class="slider">
+                      <div class="slider-fg" style="width: 75%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="cr number has-slider">
+                <div><span class="property-name">rotation_y</span>
+                  <div class="c">
+                    <div><input type="text"></div>
+                    <div class="slider">
+                      <div class="slider-fg" style="width: 50%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="cr number has-slider">
+                <div><span class="property-name">rotation_z</span>
+                  <div class="c">
+                    <div><input type="text"></div>
+                    <div class="slider">
+                      <div class="slider-fg" style="width: 50%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="folder">
+          <div class="dg">
+            <ul class="closed">
+              <li class="title">Scale</li>
+              <li class="cr number has-slider">
+                <div><span class="property-name">scale</span>
+                  <div class="c">
+                    <div><input type="text"></div>
+                    <div class="slider">
+                      <div class="slider-fg" style="width: 2.5%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="folder">
+          <div class="dg">
+            <ul class="closed">
+              <li class="title">Data</li>
+              <li class="cr string">
+                <div><span class="property-name">Source</span>
+                  <div class="c">Models found <a href="https://github.com/mrdoob/three.js/tree/master/examples/models/gltf" target="_blank">here</a></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="folder">
+          <div class="dg">
+            <ul class="closed">
+              <li class="title">Contact</li>
+              <li class="cr string">
+                <div><span class="property-name">Contact</span>
+                  <div class="c">Made by <a href="https://twitter.com/dkwiens" target="_blank">@dkwiens</a></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+      <div class="close-button close-bottom" style="width: 245px;">Close Controls</div>
+    </div>
+  </div>
+</body>
+
+</html>
