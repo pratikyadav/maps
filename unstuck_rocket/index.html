@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>Add a 3D model</title>
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+	<script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
+	<link href="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css" rel="stylesheet" />
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		#map {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<script src="https://unpkg.com/three@0.106.2/build/three.min.js"></script>
+	<script src="https://unpkg.com/three@0.106.2/examples/js/loaders/GLTFLoader.js"></script>
+	<div id="map"></div>
+	<script>
+		mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94c2F0ZWxsaXRlIiwiYSI6ImNraW95dnExbjEwaHIyeG53dGVrNXdrdzcifQ.BGqKQ3fLFoxjBsIQN-TWww';
+		var map = (window.map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/satellite-v9',
+			zoom: 16,
+			center: [32.577824, 30.027673],
+			pitch: 73,
+			bearing: -22,
+			hash: true,
+			antialias: true // create the gl context with MSAA antialiasing, so custom layers are antialiased
+		}));
+		map.on('load', function() {
+			map.addSource('mapbox-dem', {
+				'type': 'raster-dem',
+				'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+				'tileSize': 512,
+				'maxzoom': 14
+			});
+			// add the DEM source as a terrain layer with exaggerated height
+			map.setTerrain({
+				'source': 'mapbox-dem',
+				'exaggeration': 1.6
+			});
+
+
+			// add a sky layer that will show when the map is highly pitched
+			map.addLayer({
+				'id': 'sky',
+				'type': 'sky',
+				'paint': {
+					'sky-type': 'atmosphere',
+					'sky-atmosphere-sun': [0.0, 90.0],
+					'sky-atmosphere-sun-intensity': 15
+				}
+			});
+		});
+
+		var speed = 0.3
+
+		// parameters to ensure the model is georeferenced correctly on the map
+		var modelOrigin = [32.5782217, 30.0263078];
+		var modelAltitude = 10;
+		var modelRotate = [Math.PI / 2, -0.9, 0];
+
+		var modelAsMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
+			modelOrigin,
+			modelAltitude
+		);
+
+		// transformation parameters to position, rotate and scale the 3D model onto the map
+		var modelTransform = {
+			translateX: modelAsMercatorCoordinate.x,
+			translateY: modelAsMercatorCoordinate.y,
+			translateZ: modelAsMercatorCoordinate.z,
+			rotateX: modelRotate[0],
+			rotateY: modelRotate[1],
+			rotateZ: modelRotate[2],
+			/* Since our 3D model is in real world meters, a scale transform needs to be
+			 * applied since the CustomLayerInterface expects units in MercatorCoordinates.
+			 */
+			scale: 0.0000000002,
+		};
+
+		//var THREE = window.THREE;
+
+		// configuration of the custom layer for a 3D model per the CustomLayerInterface
+		var customLayer = {
+			id: 'ship',
+			type: 'custom',
+			renderingMode: '3d',
+			onAdd: function(map, gl) {
+				this.camera = new THREE.Camera();
+				this.scene = new THREE.Scene();
+
+				// create two three.js lights to illuminate the model
+				var directionalLight = new THREE.DirectionalLight(0xffffff);
+				directionalLight.position.set(0, -70, 100).normalize();
+				this.scene.add(directionalLight);
+
+				var directionalLight2 = new THREE.DirectionalLight(0xffffff);
+				directionalLight2.position.set(0, 70, 100).normalize();
+				this.scene.add(directionalLight2);
+
+				// use the three.js GLTF loader to add the 3D model to the three.js scene
+				var loader = new THREE.GLTFLoader();
+				loader.load(
+					'container/scene.gltf',
+					function(gltf) {
+						this.scene.add(gltf.scene);
+					}.bind(this),
+				);
+				this.map = map;
+
+				// use the Mapbox GL JS map canvas for three.js
+				this.renderer = new THREE.WebGLRenderer({
+					canvas: map.getCanvas(),
+					context: gl,
+					antialias: true
+				});
+
+				this.renderer.autoClear = false;
+			},
+			render: function(gl, matrix) {
+				var rotationX = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(1, 0, 0),
+					modelTransform.rotateX
+				);
+				var rotationY = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(0, 1, 0),
+					modelTransform.rotateY
+				);
+				var rotationZ = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(0, 0, 1),
+					modelTransform.rotateZ
+				);
+
+				var m = new THREE.Matrix4().fromArray(matrix);
+
+				modelAltitude = modelAltitude + speed;
+				modelAsMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
+					modelOrigin,
+					modelAltitude
+				);
+				modelTransform.translateZ = modelAsMercatorCoordinate.z;
+				var l = new THREE.Matrix4()
+					.makeTranslation(
+						modelTransform.translateX,
+						modelTransform.translateY,
+						modelTransform.translateZ
+					)
+					.scale(
+						new THREE.Vector3(
+							modelTransform.scale,
+							-modelTransform.scale,
+							modelTransform.scale
+						)
+					)
+					.multiply(rotationX)
+					.multiply(rotationY)
+					.multiply(rotationZ);
+
+				this.camera.projectionMatrix = m.multiply(l);
+				this.renderer.state.reset();
+				this.renderer.render(this.scene, this.camera);
+				this.map.triggerRepaint();
+			}
+		};
+
+
+
+		//rocket1
+
+		var modelOrigin1 = [32.5777423, 30.0266396];
+		var modelAltitude1 = 100;
+		var modelRotate1 = [Math.PI / 2, 0, 1.5];
+
+		var modelAsMercatorCoordinate1 = mapboxgl.MercatorCoordinate.fromLngLat(
+			modelOrigin1,
+			modelAltitude1
+		);
+
+		// transformation parameters to position, rotate and scale the 3D model onto the map
+		var modelTransform1 = {
+			translateX1: modelAsMercatorCoordinate1.x,
+			translateY1: modelAsMercatorCoordinate1.y,
+			translateZ1: modelAsMercatorCoordinate1.z,
+			rotateX1: modelRotate1[0],
+			rotateY1: modelRotate1[1],
+			rotateZ1: modelRotate1[2],
+			/* Since our 3D model is in real world meters, a scale transform needs to be
+			 * applied since the CustomLayerInterface expects units in MercatorCoordinates.
+			 */
+			scale1: 0.00000005,
+		};
+
+		var THREE = window.THREE;
+
+		var rocket1 = {
+			id: 'rocket',
+			type: 'custom',
+			renderingMode: '3d',
+			onAdd: function(map, gl) {
+				this.camera = new THREE.Camera();
+				this.scene = new THREE.Scene();
+
+				// create two three.js lights to illuminate the model
+				var directionalLight = new THREE.DirectionalLight(0xffffff);
+				directionalLight.position.set(0, -70, 100).normalize();
+				this.scene.add(directionalLight);
+
+				var directionalLight2 = new THREE.DirectionalLight(0xffffff);
+				directionalLight2.position.set(0, 70, 100).normalize();
+				this.scene.add(directionalLight2);
+
+				// use the three.js GLTF loader to add the 3D model to the three.js scene
+				var loader = new THREE.GLTFLoader();
+				loader.load(
+					'spacex_bfr_wip/scene.gltf',
+					function(gltf) {
+						this.scene.add(gltf.scene);
+					}.bind(this)
+				);
+				this.map = map;
+
+				// use the Mapbox GL JS map canvas for three.js
+				this.renderer = new THREE.WebGLRenderer({
+					canvas: map.getCanvas(),
+					context: gl,
+					antialias: true
+				});
+
+				this.renderer.autoClear = false;
+			},
+			render: function(gl, matrix) {
+				var rotationX1 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(1, 0, 0),
+					modelTransform1.rotateX1
+				);
+				var rotationY1 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(0, 1, 0),
+					modelTransform1.rotateY1
+				);
+				var rotationZ1 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(0, 0, 1),
+					modelTransform1.rotateZ1
+				);
+
+				var m = new THREE.Matrix4().fromArray(matrix);
+
+				modelAltitude1 = modelAltitude1 + speed;
+				modelAsMercatorCoordinate1 = mapboxgl.MercatorCoordinate.fromLngLat(
+					modelOrigin1,
+					modelAltitude1
+				);
+				modelTransform1.translateZ1 = modelAsMercatorCoordinate1.z;
+				var l = new THREE.Matrix4()
+					.makeTranslation(
+						modelTransform1.translateX1,
+						modelTransform1.translateY1,
+						modelTransform1.translateZ1
+					)
+					.scale(
+						new THREE.Vector3(
+							modelTransform1.scale1,
+							-modelTransform1.scale1,
+							modelTransform1.scale1
+						)
+					)
+					.multiply(rotationX1)
+					.multiply(rotationY1)
+					.multiply(rotationZ1);
+
+				this.camera.projectionMatrix = m.multiply(l);
+				this.renderer.state.reset();
+				this.renderer.render(this.scene, this.camera);
+				this.map.triggerRepaint();
+			}
+		};
+
+
+		//rocket2
+
+		var modelOrigin2 = [32.5795955, 30.0258516];
+		var modelAltitude2 = 100;
+		var modelRotate2 = [Math.PI / 2, 0, 1.5];
+
+		var modelAsMercatorCoordinate2 = mapboxgl.MercatorCoordinate.fromLngLat(
+			modelOrigin2,
+			modelAltitude2
+		);
+
+		// transformation parameters to position, rotate and scale the 3D model onto the map
+		var modelTransform2 = {
+			translateX2: modelAsMercatorCoordinate2.x,
+			translateY2: modelAsMercatorCoordinate2.y,
+			translateZ2: modelAsMercatorCoordinate2.z,
+			rotateX2: modelRotate1[0],
+			rotateY2: modelRotate1[1],
+			rotateZ2: modelRotate1[2],
+			/* Since our 3D model is in real world meters, a scale transform needs to be
+			 * applied since the CustomLayerInterface expects units in MercatorCoordinates.
+			 */
+			scale2: 0.00000005,
+		};
+
+		var THREE = window.THREE;
+
+		var rocket2 = {
+			id: 'rocket2',
+			type: 'custom',
+			renderingMode: '3d',
+			onAdd: function(map, gl) {
+				this.camera = new THREE.Camera();
+				this.scene = new THREE.Scene();
+
+				// create two three.js lights to illuminate the model
+				var directionalLight = new THREE.DirectionalLight(0xffffff);
+				directionalLight.position.set(0, -70, 100).normalize();
+				this.scene.add(directionalLight);
+
+				var directionalLight2 = new THREE.DirectionalLight(0xffffff);
+				directionalLight2.position.set(0, 70, 100).normalize();
+				this.scene.add(directionalLight2);
+
+				// use the three.js GLTF loader to add the 3D model to the three.js scene
+				var loader = new THREE.GLTFLoader();
+				loader.load(
+					'spacex_bfr_wip/scene.gltf',
+					function(gltf) {
+						this.scene.add(gltf.scene);
+					}.bind(this)
+				);
+				this.map = map;
+
+				// use the Mapbox GL JS map canvas for three.js
+				this.renderer = new THREE.WebGLRenderer({
+					canvas: map.getCanvas(),
+					context: gl,
+					antialias: true
+				});
+
+				this.renderer.autoClear = false;
+			},
+			render: function(gl, matrix) {
+				var rotationX2 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(1, 0, 0),
+					modelTransform2.rotateX2
+				);
+				var rotationY2 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(0, 1, 0),
+					modelTransform2.rotateY2
+				);
+				var rotationZ2 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(0, 0, 1),
+					modelTransform2.rotateZ2
+				);
+
+				var m = new THREE.Matrix4().fromArray(matrix);
+
+				modelAltitude2 = modelAltitude2 + speed;
+				modelAsMercatorCoordinate2 = mapboxgl.MercatorCoordinate.fromLngLat(
+					modelOrigin2,
+					modelAltitude2
+				);
+				modelTransform2.translateZ2 = modelAsMercatorCoordinate2.z;
+				var l = new THREE.Matrix4()
+					.makeTranslation(
+						modelTransform2.translateX2,
+						modelTransform2.translateY2,
+						modelTransform2.translateZ2
+					)
+					.scale(
+						new THREE.Vector3(
+							modelTransform2.scale2,
+							-modelTransform2.scale2,
+							modelTransform2.scale2
+						)
+					)
+					.multiply(rotationX2)
+					.multiply(rotationY2)
+					.multiply(rotationZ2);
+
+				this.camera.projectionMatrix = m.multiply(l);
+				this.renderer.state.reset();
+				this.renderer.render(this.scene, this.camera);
+				this.map.triggerRepaint();
+			}
+		};
+
+
+		//rope3
+
+		var modelOrigin3 = [32.5774971, 30.0264332];
+		var modelAltitude3 = 60;
+		var modelRotate3 = [100, 100, 100];
+
+		var modelAsMercatorCoordinate3 = mapboxgl.MercatorCoordinate.fromLngLat(
+			modelOrigin3,
+			modelAltitude3
+		);
+
+		// transformation parameters to position, rotate and scale the 3D model onto the map
+		var modelTransform3 = {
+			translateX3: modelAsMercatorCoordinate3.x,
+			translateY3: modelAsMercatorCoordinate3.y,
+			translateZ3: modelAsMercatorCoordinate3.z,
+			rotateX3: modelRotate3[0],
+			rotateY3: modelRotate3[1],
+			rotateZ3: modelRotate3[2],
+			/* Since our 3D model is in real world meters, a scale transform needs to be
+			 * applied since the CustomLayerInterface expects units in MercatorCoordinates.
+			 */
+			scale3: 0.0000002,
+		};
+
+		var THREE = window.THREE;
+
+		var rope3 = {
+			id: 'rope3',
+			type: 'custom',
+			renderingMode: '3d',
+			onAdd: function(map, gl) {
+				this.camera = new THREE.Camera();
+				this.scene = new THREE.Scene();
+
+				// create two three.js lights to illuminate the model
+				var directionalLight = new THREE.DirectionalLight(0xffffff);
+				directionalLight.position.set(0, -70, 100).normalize();
+				this.scene.add(directionalLight);
+
+				var directionalLight2 = new THREE.DirectionalLight(0xffffff);
+				directionalLight2.position.set(0, 70, 100).normalize();
+				this.scene.add(directionalLight2);
+
+				// use the three.js GLTF loader to add the 3D model to the three.js scene
+				var loader = new THREE.GLTFLoader();
+				loader.load(
+					'chain/scene.gltf',
+					function(gltf) {
+						this.scene.add(gltf.scene);
+					}.bind(this)
+				);
+				this.map = map;
+
+				// use the Mapbox GL JS map canvas for three.js
+				this.renderer = new THREE.WebGLRenderer({
+					canvas: map.getCanvas(),
+					context: gl,
+					antialias: true
+				});
+
+				this.renderer.autoClear = false;
+			},
+			render: function(gl, matrix) {
+				var rotationX3 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(1, 1, 0),
+					modelTransform3.rotateX3
+				);
+				var rotationY3 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(0, 1, 0),
+					modelTransform3.rotateY3
+				);
+				var rotationZ3 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(0, 0, 1),
+					modelTransform3.rotateZ3
+				);
+
+				var m = new THREE.Matrix4().fromArray(matrix);
+
+				modelAltitude3 = modelAltitude3 + speed;
+				modelAsMercatorCoordinate3 = mapboxgl.MercatorCoordinate.fromLngLat(
+					modelOrigin3,
+					modelAltitude3
+				);
+				modelTransform3.translateZ3 = modelAsMercatorCoordinate3.z;
+				var l = new THREE.Matrix4()
+					.makeTranslation(
+						modelTransform3.translateX3,
+						modelTransform3.translateY3,
+						modelTransform3.translateZ3
+					)
+					.scale(
+						new THREE.Vector3(
+							modelTransform3.scale3,
+							-modelTransform3.scale3,
+							modelTransform3.scale3
+						)
+					)
+					.multiply(rotationX3)
+					.multiply(rotationY3)
+					.multiply(rotationZ3);
+
+				this.camera.projectionMatrix = m.multiply(l);
+				this.renderer.state.reset();
+				this.renderer.render(this.scene, this.camera);
+				this.map.triggerRepaint();
+			}
+		};
+
+		//rope4
+
+		var modelOrigin4 = [32.5788565, 30.0257295];
+		var modelAltitude4 = 60;
+		var modelRotate4 = [-100, -100, -100];
+
+		var modelAsMercatorCoordinate4 = mapboxgl.MercatorCoordinate.fromLngLat(
+			modelOrigin4,
+			modelAltitude4
+		);
+
+		// transformation parameters to position, rotate and scale the 3D model onto the map
+		var modelTransform4 = {
+			translateX4: modelAsMercatorCoordinate4.x,
+			translateY4: modelAsMercatorCoordinate4.y,
+			translateZ4: modelAsMercatorCoordinate4.z,
+			rotateX4: modelRotate4[0],
+			rotateY4: modelRotate4[1],
+			rotateZ4: modelRotate4[2],
+			/* Since our 3D model is in real world meters, a scale transform needs to be
+			 * applied since the CustomLayerInterface expects units in MercatorCoordinates.
+			 */
+			scale4: 0.0000002,
+		};
+
+		var THREE = window.THREE;
+
+		var rope4 = {
+			id: 'rope4',
+			type: 'custom',
+			renderingMode: '3d',
+			onAdd: function(map, gl) {
+				this.camera = new THREE.Camera();
+				this.scene = new THREE.Scene();
+
+				// create two three.js lights to illuminate the model
+				var directionalLight = new THREE.DirectionalLight(0xffffff);
+				directionalLight.position.set(0, -70, 100).normalize();
+				this.scene.add(directionalLight);
+
+				var directionalLight2 = new THREE.DirectionalLight(0xffffff);
+				directionalLight2.position.set(0, 70, 100).normalize();
+				this.scene.add(directionalLight2);
+
+				// use the three.js GLTF loader to add the 3D model to the three.js scene
+				var loader = new THREE.GLTFLoader();
+				loader.load(
+					'chain/scene.gltf',
+					function(gltf) {
+						this.scene.add(gltf.scene);
+					}.bind(this)
+				);
+				this.map = map;
+
+				// use the Mapbox GL JS map canvas for three.js
+				this.renderer = new THREE.WebGLRenderer({
+					canvas: map.getCanvas(),
+					context: gl,
+					antialias: true
+				});
+
+				this.renderer.autoClear = false;
+			},
+			render: function(gl, matrix) {
+				var rotationX4 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(1, 1, 0),
+					modelTransform4.rotateX4
+				);
+				var rotationY4 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(0, 1, 0),
+					modelTransform4.rotateY4
+				);
+				var rotationZ4 = new THREE.Matrix4().makeRotationAxis(
+					new THREE.Vector3(0, 0, 1),
+					modelTransform4.rotateZ4
+				);
+
+				var m = new THREE.Matrix4().fromArray(matrix);
+
+				modelAltitude4 = modelAltitude4 + speed;
+				modelAsMercatorCoordinate4 = mapboxgl.MercatorCoordinate.fromLngLat(
+					modelOrigin4,
+					modelAltitude4
+				);
+				modelTransform4.translateZ4 = modelAsMercatorCoordinate4.z;
+				var l = new THREE.Matrix4()
+					.makeTranslation(
+						modelTransform4.translateX4,
+						modelTransform4.translateY4,
+						modelTransform4.translateZ4
+					)
+					.scale(
+						new THREE.Vector3(
+							modelTransform4.scale4,
+							-modelTransform4.scale4,
+							modelTransform4.scale4
+						)
+					)
+					.multiply(rotationX4)
+					.multiply(rotationY4)
+					.multiply(rotationZ4);
+
+				this.camera.projectionMatrix = m.multiply(l);
+				this.renderer.state.reset();
+				this.renderer.render(this.scene, this.camera);
+				this.map.triggerRepaint();
+			}
+		};
+
+		map.on('style.load', function() {
+			map.addLayer(rope3);
+		});
+
+		map.on('style.load', function() {
+			map.addLayer(rope4);
+		});
+
+
+		map.on('style.load', function() {
+			map.addLayer(rocket1);
+		});
+		map.on('style.load', function() {
+			map.addLayer(rocket2);
+		});
+		map.on('style.load', function() {
+			map.addLayer(customLayer);
+		});
+
+	</script>
+
+</body>
+
+</html>
