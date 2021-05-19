@@ -1,0 +1,14 @@
+{
+  "name": "",
+  "version": "",
+  "description": "",
+  "engines": {
+    "node": "8.0.0"
+  },
+  "author": "Damon Burgett",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "@mapbox/mapbox-gl-sync-move": "*"
+  }
+}

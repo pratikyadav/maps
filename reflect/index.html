@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Tiltshift</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <style>
+        body { margin:0; padding:0; }
+        #map-B {
+          position:absolute; top:0; bottom:50%; width:100%;
+        }
+        #map-A { position:absolute; top:50%; bottom:0; width:100%; }
+        .flip {
+          -moz-transform: scaleY(-1);
+          -o-transform: scaleY(-1);
+          -webkit-transform: scaleY(-1);
+          transform: scaleY(-1);
+          filter: FlipW;
+          -ms-filter: "FlipW";
+        }
+        .mapboxgl-canvas:focus { outline: none }
+    </style>
+</head>
+<body>
+<div id='map-B' ></div>
+<div id='map-A'></div>
+<script src=bundle.js>
+</script>
+
+</body>
+</html>
