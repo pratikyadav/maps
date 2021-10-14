@@ -895,14 +895,14 @@
 
     var guiObject = function() {
       this.model =
-        "models/bmw_i8/scene.gltf";
+        "models/stylized_deer/scene.gltf";
       this.dx = 0;
       this.dy = 0;
       this.dz = 0;
       this.rotation_x = 1;
       this.rotation_y = 0;
       this.rotation_z = 0;
-      this.scale = 0.25;
+      this.scale = 0.28;
       this.Source = ".";
       this.Contact = ".";
     };
@@ -918,8 +918,8 @@
 
       params
         .add(guiInstance, "model", {
-          little_buck: "models/little_buck/scene.gltf",
-          stylized_deer: "models/stylized_deer/scene.gltf"
+          stylized_deer: "models/stylized_deer/scene.gltf",
+          little_buck: "models/little_buck/scene.gltf"
         })
         .onChange(function(value) {
           console.log(value);
@@ -972,7 +972,7 @@
 
     // parameters to ensure the model is georeferenced correctly on the map
     var modelOrigin = [-122.4448515, 37.8074503];
-    var modelAltitude = 1;
+    var modelAltitude = 1.4;
     var modelRotate = [Math.PI / 2, 0, 0];
 
     var modelAsMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
