@@ -1,0 +1,472 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 530,
+      "max": [
+        0.90913999080657959,
+        0.90913999080657959,
+        0.98413997888565063
+      ],
+      "min": [
+        -3.6214799880981445,
+        -0.90913999080657959,
+        -3.677299976348877
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 6360,
+      "componentType": 5126,
+      "count": 530,
+      "max": [
+        1,
+        1,
+        1
+      ],
+      "min": [
+        -1,
+        -1,
+        -1
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 530,
+      "max": [
+        0.99829131364822388,
+        0.85086691379547119,
+        0.99991238117218018,
+        1
+      ],
+      "min": [
+        -0.99919724464416504,
+        -0.85856693983078003,
+        -0.99991214275360107,
+        -1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 530,
+      "max": [
+        0.99971997737884521,
+        0.99971997737884521
+      ],
+      "min": [
+        0.00028000000747852027,
+        0.00028000000747852027
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 2880,
+      "max": [
+        529
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 12720,
+      "componentType": 5126,
+      "count": 3532,
+      "max": [
+        0.91131001710891724,
+        2.9622600078582764,
+        7.4724202156066895
+      ],
+      "min": [
+        -0.91131001710891724,
+        -3.8016500473022461,
+        -0.0044800001196563244
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 55104,
+      "componentType": 5126,
+      "count": 3532,
+      "max": [
+        0.99997955560684204,
+        0.99959301948547363,
+        0.99995619058609009
+      ],
+      "min": [
+        -0.99997955560684204,
+        -0.99868941307067871,
+        -0.99985712766647339
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 8480,
+      "componentType": 5126,
+      "count": 3532,
+      "max": [
+        0.99978011846542358,
+        0.99995619058609009,
+        0.99737358093261719,
+        1
+      ],
+      "min": [
+        -0.99958890676498413,
+        -0.99964034557342529,
+        -0.99998408555984497,
+        -1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 4240,
+      "componentType": 5126,
+      "count": 3532,
+      "max": [
+        0.99440997838973999,
+        0.99684000015258789
+      ],
+      "min": [
+        -0.0005300000193528831,
+        0.083070002496242523
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 11520,
+      "componentType": 5125,
+      "count": 18312,
+      "max": [
+        3531
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "TheCaitasaurus (https://sketchfab.com/thecaitasaurus)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/models/339b8902625e4f458882aeb764ecfb0c",
+      "title": "Little Buck 2.0"
+    },
+    "generator": "Sketchfab-3.19.6",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 84768,
+      "byteOffset": 0,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 32496,
+      "byteOffset": 84768,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 97488,
+      "byteOffset": 117264,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 64992,
+      "byteOffset": 214752,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 279744,
+      "uri": "scene.bin"
+    }
+  ],
+  "extensionsRequired": [
+    "KHR_materials_pbrSpecularGlossiness"
+  ],
+  "extensionsUsed": [
+    "KHR_materials_pbrSpecularGlossiness"
+  ],
+  "images": [
+    {
+      "uri": "textures/Material.001_diffuse.png"
+    },
+    {
+      "uri": "textures/Material.001_specularGlossiness.png"
+    },
+    {
+      "uri": "textures/Fur.001_diffuse.png"
+    },
+    {
+      "uri": "textures/Fur.001_normal.png"
+    },
+    {
+      "uri": "textures/Fur.001_specularGlossiness.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseFactor": [
+            0.99549270729999995,
+            0.99549270729999995,
+            0.99549270729999995,
+            1
+          ],
+          "diffuseTexture": {
+            "index": 2,
+            "texCoord": 0
+          },
+          "glossinessFactor": 0.66844868209999997,
+          "specularFactor": [
+            0.089832329899999994,
+            0.089832329899999994,
+            0.089832329899999994
+          ],
+          "specularGlossinessTexture": {
+            "index": 4,
+            "texCoord": 0
+          }
+        }
+      },
+      "name": "Fur.001",
+      "normalTexture": {
+        "index": 3,
+        "scale": 1,
+        "texCoord": 0
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseFactor": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "diffuseTexture": {
+            "index": 0,
+            "texCoord": 0
+          },
+          "glossinessFactor": 0.58668767580000003,
+          "specularFactor": [
+            0.077253713500000001,
+            0.077253713500000001,
+            0.077253713500000001
+          ],
+          "specularGlossinessTexture": {
+            "index": 1,
+            "texCoord": 0
+          }
+        }
+      },
+      "name": "Material.001"
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Eyes_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Deer-lowP_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "name": "RootNode (gltf orientation matrix)",
+      "rotation": [
+        -0.70710678118654746,
+        -0,
+        -0,
+        0.70710678118654757
+      ]
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        0.54846858978271484,
+        -0.83617115020751953,
+        0,
+        0,
+        0.83617115020751953,
+        0.54846858978271484,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2.0888328552246094,
+        3.0288128852844238,
+        0,
+        1
+      ],
+      "name": "RootNode (model correction matrix)"
+    },
+    {
+      "children": [
+        3,
+        5
+      ],
+      "name": "Root"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        0.083350000000000007,
+        0.08747000000000002,
+        0,
+        0,
+        -0,
+        0,
+        0.12082000000000001,
+        0,
+        0.08747000000000002,
+        -0.083350000000000007,
+        0,
+        0,
+        4.0799500000000002,
+        -3.0706699999999998,
+        5.7433300000000003,
+        1
+      ],
+      "name": "Eyes"
+    },
+    {
+      "mesh": 0,
+      "name": "Eyes_0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        3.8488799999999999,
+        0,
+        0,
+        1
+      ],
+      "name": "Deer-lowP"
+    },
+    {
+      "mesh": 1,
+      "name": "Deer-lowP_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "OSG_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 4
+    }
+  ]
+}
+
