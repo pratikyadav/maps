@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mapbox GL JS globe</title>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel='stylesheet' href='dist/mapbox-gl.css' />
+    <link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
+    <style>
+        body { margin: 0; padding: 0; }
+        html, body, #map { height: 100%; }
+    </style>
+</head>
+
+<body>
+<div id='map'></div>
+<div class='button pin-topleft z100' onclick='togglePlayback()'>Play/pause</div>
+</div>
+
+<script src='dist/mapbox-gl-dev.js'></script>
+<script>
+
+mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94c2F0ZWxsaXRlIiwiYSI6ImNqZWZ0MHg0djFqZWoyeG9kN3ZiMmkyd3cifQ.y2HNjGo7FcKQ7psI_BfGqQ';
+
+var videoStyle = {
+    "version": 8,
+    "sources": {
+        "video": {
+            "type": "video",
+            "urls": [ "ozone.mp4", "https://static-assets.mapbox.com/mapbox-gl-js/drone.webm" ],
+            "coordinates": [
+
+
+                [-180.0, 85.0511287798066],
+                [180.0, 85.0511287798066],
+                [180.0, -85.0511287798066],
+                [-180.0, -85.0511287798066]
+            ]
+        },
+        "satellite": {
+            "type": "raster",
+
+            "url": "mapbox://mapbox.satellite",
+            "tileSize": 256,
+            'paint': {"raster-opacity": 0.5,}
+        },
+        'mapbox-dem': {
+            "type": "raster-dem",
+            "url": "mapbox://mapbox.terrain-rgb",
+            "tileSize": 512,
+            "maxzoom": 14
+        },
+        'mapbox-vector': {
+            "type": "vector",
+            "url": "mapbox://mapbox.mapbox-streets-v8"
+        }
+    },
+    "layers": [{
+        "id": "background",
+        "type": "background",
+        "paint": {
+            "background-color": "rgb(4,7,14)"
+        }
+    }, {
+        "id": "video",
+        "type": "raster",
+        "source": "video"
+    },{
+        "id": "satellite",
+        "type": "raster",
+        "source": "satellite",
+        'paint': {
+          "raster-opacity": 0.1,
+        }
+    }, {
+        "id": "mapbox-vector",
+        "type": "line",
+        "source": "mapbox-vector",
+        'source-layer': 'water',
+        'layout': {
+        'line-join': 'round',
+        'line-cap': 'round'
+        },
+        'paint': {
+        'line-color': '#FFFFFF',
+        'line-width': 1
+        }
+    }
+  ]
+};
+var map = new mapboxgl.Map({
+    container: 'map',
+    zoom: 0,
+    center: [0, 0],
+    style: videoStyle,
+    hash: false,
+    projection: 'globe'
+});
+
+document.getElementById('terrain-checkbox').onclick = function() {
+    map.setTerrain(this.checked ? {"source": "mapbox-dem"} : null);
+};
+
+document.getElementById('timeslider')
+    .addEventListener('change', function() {
+        map.getSource('video').seek(parseFloat(this.value));
+    });
+
+var playing = false;
+
+window.setInterval(function() {
+    if (!playing) return;
+    var time = map.getSource('video').video.currentTime;
+    document.getElementById('timeslider').value = time;
+}, 500);
+
+function togglePlayback() {
+    playing = !playing;
+    if (playing) map.getSource("video").play();
+    else map.getSource("video").pause();
+}
+
+document.getElementById('projName').addEventListener('change', (e) => {
+    const el = document.getElementById('projName');
+    map.setProjection(el.options[el.selectedIndex].value);
+});
+</script>
+</body>
+</html>
