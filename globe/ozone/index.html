@@ -4,7 +4,8 @@
     <title>Mapbox GL JS globe</title>
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <link rel='stylesheet' href='dist/mapbox-gl.css' />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
     <link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
     <style>
         body { margin: 0; padding: 0; }
@@ -17,7 +18,6 @@
 <div class='button pin-topleft z100' onclick='togglePlayback()'>Play/pause</div>
 </div>
 
-<script src='dist/mapbox-gl-dev.js'></script>
 <script>
 
 mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94c2F0ZWxsaXRlIiwiYSI6ImNqZWZ0MHg0djFqZWoyeG9kN3ZiMmkyd3cifQ.y2HNjGo7FcKQ7psI_BfGqQ';
@@ -59,7 +59,7 @@ var videoStyle = {
         "id": "background",
         "type": "background",
         "paint": {
-            "background-color": "rgb(4,7,14)"
+            "background-color": "rgb(0, 0, 0)"
         }
     }, {
         "id": "video",
@@ -70,7 +70,7 @@ var videoStyle = {
         "type": "raster",
         "source": "satellite",
         'paint': {
-          "raster-opacity": 0.1,
+          "raster-opacity": 0.04,
         }
     }, {
         "id": "mapbox-vector",
@@ -83,12 +83,13 @@ var videoStyle = {
         },
         'paint': {
         'line-color': '#FFFFFF',
-        'line-width': 1
+        'line-width': 0.2,
+        'line-opacity': 0.5
         }
     }
   ]
 };
-var map = new mapboxgl.Map({
+const map = new mapboxgl.Map({
     container: 'map',
     zoom: 0,
     center: [0, 0],
@@ -97,22 +98,34 @@ var map = new mapboxgl.Map({
     projection: 'globe'
 });
 
-document.getElementById('terrain-checkbox').onclick = function() {
-    map.setTerrain(this.checked ? {"source": "mapbox-dem"} : null);
-};
+map.on('load', () => {
+// Set the default atmosphere style
+map.setFog({
+'range': [-1, 2],
+'horizon-blend': 0.3,
+'color': 'rgb(92, 110, 153)',
+//'high-color': '#add8e6',
+//'space-color': '#d8f2ff',
+'star-intensity': 0.0
+});
+});
 
-document.getElementById('timeslider')
-    .addEventListener('change', function() {
-        map.getSource('video').seek(parseFloat(this.value));
-    });
+// document.getElementById('terrain-checkbox').onclick = function() {
+//     map.setTerrain(this.checked ? {"source": "mapbox-dem"} : null);
+// };
+
+// document.getElementById('timeslider')
+//     .addEventListener('change', function() {
+//         map.getSource('video').seek(parseFloat(this.value));
+//     });
 
 var playing = false;
 
-window.setInterval(function() {
-    if (!playing) return;
-    var time = map.getSource('video').video.currentTime;
-    document.getElementById('timeslider').value = time;
-}, 500);
+// window.setInterval(function() {
+//     if (!playing) return;
+//     var time = map.getSource('video').video.currentTime;
+//     document.getElementById('timeslider').value = time;
+// }, 500);
 
 function togglePlayback() {
     playing = !playing;
@@ -124,6 +137,8 @@ document.getElementById('projName').addEventListener('change', (e) => {
     const el = document.getElementById('projName');
     map.setProjection(el.options[el.selectedIndex].value);
 });
+
+
 </script>
 </body>
 </html>
