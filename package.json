@@ -1,0 +1,25 @@
+{
+  "name": "maps",
+  "version": "1.0.0",
+  "description": "> A comprehensive collection of interactive maps and 3D visualizations powered by **Mapbox GL JS v3.13.0**",
+  "main": "capture-screenshots.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pratikyadav/maps.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/pratikyadav/maps/issues"
+  },
+  "homepage": "https://github.com/pratikyadav/maps#readme",
+  "dependencies": {
+    "puppeteer": "^24.10.2",
+    "sharp": "^0.34.2"
+  }
+}

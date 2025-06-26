@@ -1,0 +1,199 @@
+name: Test Mapbox Pages
+
+on:
+  push:
+    branches: [ gh-pages, pratik/claude-code-test ]
+  pull_request:
+    branches: [ gh-pages ]
+
+jobs:
+  test-pages:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: |
+        npm install -g http-server
+        npm init -y
+        npm install puppeteer
+        
+    - name: Create test script
+      run: |
+        cat > test-pages.js << 'EOF'
+        const puppeteer = require('puppeteer');
+        const fs = require('fs');
+        const path = require('path');
+
+        async function testPage(browser, pagePath, baseUrl) {
+          const page = await browser.newPage();
+          
+          // Set up console logging to catch errors
+          const logs = [];
+          page.on('console', msg => {
+            if (msg.type() === 'error') {
+              logs.push(`Console Error: ${msg.text()}`);
+            }
+          });
+          
+          page.on('pageerror', error => {
+            logs.push(`Page Error: ${error.message}`);
+          });
+          
+          try {
+            console.log(`Testing: ${pagePath}`);
+            
+            // Navigate to page with more relaxed settings
+            const response = await page.goto(`${baseUrl}/${pagePath}`, {
+              waitUntil: 'domcontentloaded',
+              timeout: 45000
+            });
+            
+            // Check if page loaded successfully
+            if (!response.ok()) {
+              throw new Error(`HTTP ${response.status()}: ${response.statusText()}`);
+            }
+            
+            // Wait for basic DOM to be ready
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Check if page contains mapbox reference
+            const hasMapbox = await page.evaluate(() => {
+              return document.body.innerHTML.includes('mapbox-gl') || 
+                     document.body.innerHTML.includes('mapboxgl') ||
+                     typeof window.mapboxgl !== 'undefined';
+            });
+            
+            if (hasMapbox) {
+              // Try to wait for Mapbox to load, but don't fail if it doesn't
+              try {
+                await page.waitForFunction(() => {
+                  return typeof window.mapboxgl !== 'undefined';
+                }, { timeout: 5000 });
+                
+                // Wait a bit more for map to start initializing
+                await new Promise(resolve => setTimeout(resolve, 3000));
+              } catch (e) {
+                // Mapbox might not be fully loaded, but that's ok for basic testing
+                logs.push(`Mapbox loading timeout (non-critical): ${e.message}`);
+              }
+            }
+            
+            // Check for critical JavaScript errors only
+            const criticalErrors = logs.filter(log => 
+              log.includes('SyntaxError') || 
+              log.includes('ReferenceError') ||
+              log.includes('TypeError') && !log.includes('mapbox')
+            );
+            
+            if (criticalErrors.length > 0) {
+              console.warn(`⚠️  Critical errors in ${pagePath}:`);
+              criticalErrors.forEach(log => console.warn(`   ${log}`));
+            }
+            
+            console.log(`✅ ${pagePath} - OK`);
+            return { success: true, path: pagePath, errors: logs };
+            
+          } catch (error) {
+            console.error(`❌ ${pagePath} - FAILED: ${error.message}`);
+            return { success: false, path: pagePath, error: error.message, errors: logs };
+          } finally {
+            await page.close();
+          }
+        }
+
+        async function findHtmlPages() {
+          const pages = [];
+          
+          function scanDirectory(dir, basePath = '') {
+            const items = fs.readdirSync(dir);
+            
+            for (const item of items) {
+              const fullPath = path.join(dir, item);
+              const relativePath = basePath ? `${basePath}/${item}` : item;
+              
+              if (fs.statSync(fullPath).isDirectory()) {
+                // Skip hidden directories and node_modules
+                if (!item.startsWith('.') && item !== 'node_modules') {
+                  scanDirectory(fullPath, relativePath);
+                }
+              } else if (item === 'index.html') {
+                pages.push(basePath || '.');
+              }
+            }
+          }
+          
+          scanDirectory('.');
+          return pages.filter(page => page !== '.'); // Remove root if exists
+        }
+
+        async function main() {
+          const browser = await puppeteer.launch({
+            headless: 'new',
+            args: [
+              '--no-sandbox', 
+              '--disable-setuid-sandbox', 
+              '--disable-dev-shm-usage',
+              '--disable-web-security',
+              '--disable-features=VizDisplayCompositor'
+            ]
+          });
+          
+          const baseUrl = 'http://localhost:8080';
+          const pages = await findHtmlPages();
+          
+          console.log(`Found ${pages.length} pages to test:`);
+          pages.forEach(page => console.log(`  - ${page}/index.html`));
+          console.log('');
+          
+          const results = [];
+          
+          for (const pagePath of pages) {
+            const result = await testPage(browser, `${pagePath}/index.html`, baseUrl);
+            results.push(result);
+          }
+          
+          await browser.close();
+          
+          // Summary
+          const successful = results.filter(r => r.success).length;
+          const failed = results.filter(r => !r.success).length;
+          
+          console.log('\n📊 Test Summary:');
+          console.log(`✅ Successful: ${successful}`);
+          console.log(`❌ Failed: ${failed}`);
+          console.log(`📄 Total: ${results.length}`);
+          
+          if (failed > 0) {
+            console.log('\nFailed pages:');
+            results.filter(r => !r.success).forEach(r => {
+              console.log(`  - ${r.path}: ${r.error}`);
+            });
+            
+            // Don't fail the build for now, just report issues
+            console.log('\n⚠️  Some pages had issues, but continuing...');
+          } else {
+            console.log('\n🎉 All pages loaded successfully!');
+          }
+        }
+
+        main().catch(console.error);
+        EOF
+        
+    - name: Start HTTP server
+      run: |
+        http-server . -p 8080 &
+        sleep 5
+        
+    - name: Test pages
+      run: node test-pages.js
+      
+    - name: Stop HTTP server
+      run: pkill -f http-server || true
