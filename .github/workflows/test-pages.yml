@@ -22,7 +22,8 @@ jobs:
     - name: Install dependencies
       run: |
         npm install -g http-server
-        npm install -g puppeteer
+        npm init -y
+        npm install puppeteer
         
     - name: Create test script
       run: |
