@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screenshot Collage Creator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .collage-section {
+            margin-bottom: 40px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .collage-grid {
+            display: grid;
+            padding: 20px;
+            gap: 15px;
+        }
+        
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .screenshot-placeholder {
+            aspect-ratio: 3/2;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .screenshot-placeholder:hover {
+            border-color: #667eea;
+            background: linear-gradient(45deg, #f8f9ff, #e8eaff);
+        }
+        
+        .screenshot-placeholder .title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .screenshot-placeholder .description {
+            font-size: 12px;
+            color: #666;
+            padding: 0 10px;
+        }
+        
+        .upload-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .screenshot-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        
+        .download-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s ease;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .instructions {
+            background: #e7f3ff;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-3, .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ Mapbox Demo Screenshot Collages</h1>
+        
+        <div class="instructions">
+            <h3>📋 Instructions</h3>
+            <ol>
+                <li>First, run the screenshot capture script: <code>node capture-screenshots.js</code></li>
+                <li>Click on each placeholder below to upload the corresponding screenshot</li>
+                <li>Use the download buttons to save collages as PNG files</li>
+                <li>Upload the collages to your repository and update the README</li>
+            </ol>
+        </div>
+        
+        <!-- Featured Maps Collage -->
+        <div class="collage-section">
+            <div class="section-header">🌟 Featured Maps & Styles</div>
+            <div class="collage-grid grid-3" id="featured-collage">
+                <div class="screenshot-placeholder" data-name="mapbox-standard">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🗺️ Mapbox Standard</div>
+                    <div class="description">Dynamic lighting & 3D buildings</div>
+                </div>
+                <div class="screenshot-placeholder" data-name="mapbox-streets">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🛣️ Streets View</div>
+                    <div class="description">Classic street map view</div>
+                </div>
+                <div class="screenshot-placeholder" data-name="mapbox-satellite">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🛰️ Satellite View</div>
+                    <div class="description">High-resolution satellite imagery</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Globe & Terrain Collage -->
+        <div class="collage-section">
+            <div class="section-header">🌍 Globe & Terrain Views</div>
+            <div class="collage-grid grid-4" id="globe-collage">
+                <div class="screenshot-placeholder" data-name="3d-terrain">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🏔️ 3D Terrain</div>
+                    <div class="description">Elevation and mountains</div>
+                </div>
+                <div class="screenshot-placeholder" data-name="mars">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🔴 Mars Surface</div>
+                    <div class="description">Red planet exploration</div>
+                </div>
+                <div class="screenshot-placeholder" data-name="globe-ozone">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🌍 Globe with Ozone</div>
+                    <div class="description">Atmospheric visualization</div>
+                </div>
+                <div class="screenshot-placeholder" data-name="globe-mars">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🪐 Globe Mars</div>
+                    <div class="description">Mars globe projection</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Games & Interactive Collage -->
+        <div class="collage-section">
+            <div class="section-header">🎮 Games & Interactive Experiences</div>
+            <div class="collage-grid grid-3" id="games-collage">
+                <div class="screenshot-placeholder" data-name="helicopter-game">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🚁 Helicopter Game</div>
+                    <div class="description">3D flight controls</div>
+                </div>
+                <div class="screenshot-placeholder" data-name="golden-gate">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🌉 Golden Gate Bridge</div>
+                    <div class="description">Iconic bridge visualization</div>
+                </div>
+                <div class="screenshot-placeholder" data-name="dragon-flight">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🐉 Dragon Flight</div>
+                    <div class="description">Animated dragon over SF</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Vehicle Simulations Collage -->
+        <div class="collage-section">
+            <div class="section-header">🚗 Vehicle Simulations</div>
+            <div class="collage-grid grid-3" id="vehicles-collage">
+                <div class="screenshot-placeholder" data-name="3d-cars">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🏎️ 3D Cars</div>
+                    <div class="description">Interactive car models</div>
+                </div>
+                <div class="screenshot-placeholder" data-name="3d-bucks">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🦌 3D Bucks</div>
+                    <div class="description">Animated wildlife models</div>
+                </div>
+                <div class="screenshot-placeholder" data-name="spacex-launch">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🚀 SpaceX Launch</div>
+                    <div class="description">Rocket launch simulation</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Historical Events Collage -->
+        <div class="collage-section">
+            <div class="section-header">🌊 Historical Events & Disasters</div>
+            <div class="collage-grid grid-3" id="events-collage">
+                <div class="screenshot-placeholder" data-name="suez-canal">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🚢 Suez Canal Ship</div>
+                    <div class="description">Ever Given container ship</div>
+                </div>
+                <div class="screenshot-placeholder" data-name="ship-rescue">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🚀 Ship Rescue</div>
+                    <div class="description">Rescue operation with rocket</div>
+                </div>
+                <div class="screenshot-placeholder" data-name="flood-imagery">
+                    <input type="file" class="upload-input" accept="image/*">
+                    <div class="title">🌊 Uttarakhand Flood</div>
+                    <div class="description">Satellite flood damage imagery</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="download-section">
+            <h3>💾 Download Collages</h3>
+            <button class="download-btn" onclick="downloadCollage('featured-collage', 'featured-maps-collage.png')">
+                Download Featured Maps
+            </button>
+            <button class="download-btn" onclick="downloadCollage('globe-collage', 'globe-terrain-collage.png')">
+                Download Globe & Terrain
+            </button>
+            <button class="download-btn" onclick="downloadCollage('games-collage', 'games-interactive-collage.png')">
+                Download Games & Interactive
+            </button>
+            <button class="download-btn" onclick="downloadCollage('vehicles-collage', 'vehicle-simulations-collage.png')">
+                Download Vehicle Simulations
+            </button>
+            <button class="download-btn" onclick="downloadCollage('events-collage', 'historical-events-collage.png')">
+                Download Historical Events
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Handle file uploads
+        document.querySelectorAll('.upload-input').forEach(input => {
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const placeholder = input.parentElement;
+                        placeholder.innerHTML = `<img src="${e.target.result}" class="screenshot-preview" alt="Screenshot">`;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+        
+        // Download collage function
+        function downloadCollage(collageId, filename) {
+            const collageElement = document.getElementById(collageId);
+            
+            // Use html2canvas library if available, otherwise show instructions
+            if (typeof html2canvas !== 'undefined') {
+                html2canvas(collageElement, {
+                    backgroundColor: '#ffffff',
+                    scale: 2
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = filename;
+                    link.href = canvas.toDataURL();
+                    link.click();
+                });
+            } else {
+                alert('To use the download feature, include html2canvas library:\n<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>');
+            }
+        }
+    </script>
+    
+    <!-- Uncomment to enable download functionality -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> -->
+</body>
+</html>
