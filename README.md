@@ -20,3 +20,5 @@
 - **Uttrakhand Flood** https://pratikyadav.github.io/maps/uk-flood-imagery/
 - **Dragon flying over San Francisco** https://pratikyadav.github.io/maps/dragon-over-sf/
 - **3D Cars on map** https://pratikyadav.github.io/maps/cars/
+- **Bucks** https://pratikyadav.github.io/maps/bucks/
+- **Reflect** https://pratikyadav.github.io/maps/reflect/
