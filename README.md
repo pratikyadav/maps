@@ -8,6 +8,7 @@
 - **Mapbox 3D Terrain** https://pratikyadav.github.io/maps/3d/
 - **Mars** https://pratikyadav.github.io/maps/mapbox-mars/
 - **Globe with Ozone** https://pratikyadav.github.io/maps/globe/ozone/
+- **Globe Mars** https://pratikyadav.github.io/maps/globe/mars/
 
 
 ## Demo/Projects
@@ -20,3 +21,5 @@
 - **Uttrakhand Flood** https://pratikyadav.github.io/maps/uk-flood-imagery/
 - **Dragon flying over San Francisco** https://pratikyadav.github.io/maps/dragon-over-sf/
 - **3D Cars on map** https://pratikyadav.github.io/maps/cars/
+- **3D Bucks** https://pratikyadav.github.io/maps/bucks/
+- **Reflect** https://pratikyadav.github.io/maps/reflect/
