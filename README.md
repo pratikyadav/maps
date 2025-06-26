@@ -2,6 +2,12 @@
 
 > A comprehensive collection of interactive maps and 3D visualizations powered by **Mapbox GL JS v3.13.0**
 
+<div align="center">
+
+![All Mapbox Demos](.github/assets/all-demos-collage.png)
+
+</div>
+
 [![Mapbox GL JS](https://img.shields.io/badge/Mapbox%20GL%20JS-v3.13.0-blue?style=for-the-badge&logo=mapbox)](https://docs.mapbox.com/mapbox-gl-js/)
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live%20Demo-green?style=for-the-badge&logo=github)](https://pratikyadav.github.io/maps/)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](./LICENSE)
@@ -14,6 +20,8 @@ Explore different map styles and discover the power of Mapbox's Standard Style w
 
 <div align="center">
 
+![Featured Maps & Styles](.github/assets/featured-maps-collage.png)
+
 | 🗺️ **Mapbox Standard** | 🛣️ **Streets View** | 🛰️ **Satellite View** |
 |:---:|:---:|:---:|
 | [![Standard](https://img.shields.io/badge/Try%20Demo-Mapbox%20Standard-blue?style=flat-square)](https://pratikyadav.github.io/maps/mapbox-standard/) | [![Streets](https://img.shields.io/badge/Try%20Demo-Streets-green?style=flat-square)](https://pratikyadav.github.io/maps/mapbox-streets/) | [![Satellite](https://img.shields.io/badge/Try%20Demo-Satellite-orange?style=flat-square)](https://pratikyadav.github.io/maps/mapbox-satellite/) |
@@ -25,6 +33,8 @@ Explore different map styles and discover the power of Mapbox's Standard Style w
 
 <div align="center">
 
+![Globe & Terrain Views](.github/assets/globe-terrain-collage.png)
+
 | 🏔️ **3D Terrain** | 🔴 **Mars Surface** | 🌍 **Globe with Ozone** | 🪐 **Globe Mars** |
 |:---:|:---:|:---:|:---:|
 | [![3D Terrain](https://img.shields.io/badge/Try%20Demo-3D%20Terrain-brown?style=flat-square)](https://pratikyadav.github.io/maps/3d/) | [![Mars](https://img.shields.io/badge/Try%20Demo-Mars-red?style=flat-square)](https://pratikyadav.github.io/maps/mapbox-mars/) | [![Ozone](https://img.shields.io/badge/Try%20Demo-Ozone-cyan?style=flat-square)](https://pratikyadav.github.io/maps/globe/ozone/) | [![Mars Globe](https://img.shields.io/badge/Try%20Demo-Mars%20Globe-darkred?style=flat-square)](https://pratikyadav.github.io/maps/globe/mars/) |
@@ -33,10 +43,16 @@ Explore different map styles and discover the power of Mapbox's Standard Style w
 
 ### 🏗️ 3D Architecture
 
+<div align="center">
+
+![3D Architecture](.github/assets/3d-architecture-collage.png)
+
 | 🏢 **3D Buildings** |
 |:---:|
 | [![3D Buildings](https://img.shields.io/badge/Try%20Demo-3D%20Buildings-purple?style=flat-square)](https://pratikyadav.github.io/maps/mapbox-3d-buildings/) |
 | *Extruded buildings with shadows* |
+
+</div>
 
 ---
 
@@ -48,6 +64,8 @@ Experience dynamic visualizations, games, and real-world simulations with 3D mod
 
 <div align="center">
 
+![Games & Interactive Experiences](.github/assets/games-interactive-collage.png)
+
 | 🚁 **Helicopter Game** | 🌉 **Golden Gate Bridge** | 🐉 **Dragon Flight** |
 |:---:|:---:|:---:|
 | [![Helicopter](https://img.shields.io/badge/Play%20Game-Helicopter-green?style=flat-square)](https://pratikyadav.github.io/maps/3d-helicoptor-game/) | [![Golden Gate](https://img.shields.io/badge/Explore-Golden%20Gate-gold?style=flat-square)](https://pratikyadav.github.io/maps/golden-gate/) | [![Dragon](https://img.shields.io/badge/Watch-Dragon%20Flight-red?style=flat-square)](https://pratikyadav.github.io/maps/dragon-over-sf/) |
@@ -58,6 +76,8 @@ Experience dynamic visualizations, games, and real-world simulations with 3D mod
 ### 🚗 Vehicle Simulations
 
 <div align="center">
+
+![Vehicle Simulations](.github/assets/vehicle-simulations-collage.png)
 
 | 🏎️ **3D Cars** | 🦌 **3D Bucks** | 🚀 **SpaceX Launch** |
 |:---:|:---:|:---:|
